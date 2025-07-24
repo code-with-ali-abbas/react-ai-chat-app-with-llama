@@ -1,7 +1,5 @@
 # Ollama AI Chat - React Application
 
-![Ollama AI Chat Screenshot](./public/screenshot.png)
-
 ## Table of Contents
 - [Overview](#overview)
 - [Features](#features)
