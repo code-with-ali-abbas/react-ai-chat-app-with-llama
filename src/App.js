@@ -13,17 +13,26 @@ function App() {
   const handleChat = async () => {
     try {
       setLoading(true);
+      setFailed(false);
+      setMessageResponse("");
+
       const response = await ollama.chat({
         model: "llama3.2",
         messages: [{ role: "user", content: prompt }],
+        stream: true,
       });
+
       setLoading(false);
-      setMessageResponse(response.message.content);
+
+      for await (const chunk of response) {
+        setMessageResponse((prev) => prev + (chunk.message?.content || ""));
+      }
     } catch (error) {
       setFailed(true);
-      setLoading(false);
       console.error(error.message);
       setMessageResponse("Failed to get response. Check console.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -71,6 +80,7 @@ function App() {
             onClick={handleChat}
             disabled={!prompt}
             loading={loading}
+            loadingPosition="end"
             sx={{
               backgroundColor: "blue",
               color: "white",
